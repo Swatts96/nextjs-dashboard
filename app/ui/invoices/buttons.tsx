@@ -26,8 +26,8 @@ export function UpdateInvoice({ id }: { id: string }) {
 }
 
 export function DeleteInvoice({ id }: { id: string }) {
-  async function handleDelete(formData: FormData) {
-    await deleteInvoice(id); // Ensure deleteInvoice returns `void`
+  async function handleDelete(_formData: FormData) { // ✅ ESLint ignores _formData
+    await deleteInvoice(id);
   }
 
   return (
