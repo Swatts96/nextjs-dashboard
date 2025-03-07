@@ -73,7 +73,7 @@ async function seedCustomers(tx: Sql) {
   );
 }
 
-async function seedRevenue(tx: any) {
+async function seedRevenue(tx: Sql) {
   await tx`
     CREATE TABLE IF NOT EXISTS revenue (
       month VARCHAR(4) NOT NULL UNIQUE,
