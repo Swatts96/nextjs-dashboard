@@ -1,13 +1,14 @@
 import bcryptjs from 'bcryptjs';
 import postgres from 'postgres';
 import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+import { Sql } from 'postgres';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 // Ensure the UUID extension exists before running transactions
 await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`;
 
-async function seedUsers(tx: any) {
+async function seedUsers(tx: Sql) {
   await tx`
     CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -29,7 +30,7 @@ async function seedUsers(tx: any) {
   );
 }
 
-async function seedInvoices(tx: any) {
+async function seedInvoices(tx: Sql) {
   await tx`
     CREATE TABLE IF NOT EXISTS invoices (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -51,7 +52,7 @@ async function seedInvoices(tx: any) {
   );
 }
 
-async function seedCustomers(tx: any) {
+async function seedCustomers(tx: Sql) {
   await tx`
     CREATE TABLE IF NOT EXISTS customers (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,

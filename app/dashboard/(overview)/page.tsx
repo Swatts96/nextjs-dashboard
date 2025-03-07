@@ -14,13 +14,11 @@ import {
  
 export default async function Page() {
   // Remove `const latestInvoices = await fetchLatestInvoices()`
-  const {
-    numberOfInvoices,
-    numberOfCustomers,
-    totalPaidInvoices,
-    totalPendingInvoices,
-  } = await fetchCardData();
- 
+  
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const { numberOfInvoices, numberOfCustomers, totalPaidInvoices, totalPendingInvoices } = await fetchCardData();
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
