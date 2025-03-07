@@ -26,8 +26,8 @@ export function UpdateInvoice({ id }: { id: string }) {
 }
 
 export function DeleteInvoice({ id }: { id: string }) {
-  async function handleDelete(_formData: FormData) {
-    void _formData; // ✅ Trick ESLint by referencing the variable
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async function handleDelete(formData: FormData) {
     await deleteInvoice(id);
   }
 
