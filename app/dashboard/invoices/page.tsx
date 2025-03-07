@@ -1,6 +1,4 @@
-'use client';
-
-
+import postgres from 'postgres';
 import Pagination from '@/app/ui/invoices/pagination';
 import Search from '@/app/ui/search';
 import Table from '@/app/ui/invoices/table';
@@ -14,18 +12,16 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Invoices',
 };
- 
-export default async function Page(props: {
-    searchParams?: Promise<{
-      query?: string;
-      page?: string;
-    }>;
-  }) {
-    const searchParams = await props.searchParams;
-    const query = searchParams?.query || '';
-    const currentPage = Number(searchParams?.page) || 1;
-    const totalPages = await fetchInvoicesPages(query);
 
+// This is now a Server Component (no 'use client')
+export default async function Page(props: {
+  searchParams?: { query?: string; page?: string };
+}) {
+  const { query = '', page = '1' } = props.searchParams ?? {};
+  const currentPage = Number(page);
+
+  // This works server-side
+  const totalPages = await fetchInvoicesPages(query);
 
   return (
     <div className="w-full">
@@ -36,7 +32,7 @@ export default async function Page(props: {
         <Search placeholder="Search invoices..." />
         <CreateInvoice />
       </div>
-       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
+      <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
