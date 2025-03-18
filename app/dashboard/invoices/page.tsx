@@ -1,27 +1,31 @@
-import postgres from 'postgres';
 import Pagination from '@/app/ui/invoices/pagination';
 import Search from '@/app/ui/search';
-import Table from '@/app/ui/invoices/table';
-import { CreateInvoice } from '@/app/ui/invoices/buttons';
+import InvoicesTable from '@/app/ui/invoices/table'; // ✅ Updated import
+import { CreateInvoice } from '@/app/ui/invoices/buttons'; 
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
-import { Suspense } from 'react';
-import { fetchInvoicesPages } from '@/app/lib/data';
+import { fetchInvoicesPages, fetchFilteredInvoices } from '@/app/lib/data';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
+
+
 
 export const metadata: Metadata = {
   title: 'Invoices',
 };
 
-// This is now a Server Component (no 'use client')
-export default async function Page(props: {
+// ✅ Server Component
+export default async function Page({
+  searchParams,
+}: {
   searchParams?: { query?: string; page?: string };
 }) {
-  const { query = '', page = '1' } = props.searchParams ?? {};
+  const { query = '', page = '1' } = searchParams ?? {};
   const currentPage = Number(page);
 
-  // This works server-side
+  // ✅ Fetch invoices in server component
   const totalPages = await fetchInvoicesPages(query);
+  const invoices = await fetchFilteredInvoices(query, currentPage); // ✅ Fetch invoices here
 
   return (
     <div className="w-full">
@@ -32,9 +36,12 @@ export default async function Page(props: {
         <Search placeholder="Search invoices..." />
         <CreateInvoice />
       </div>
+
+      {/* ✅ Pass invoices as a prop to InvoicesTable */}
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
+        <InvoicesTable invoices={invoices} />
       </Suspense>
+
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
       </div>
